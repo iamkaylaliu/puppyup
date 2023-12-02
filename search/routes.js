@@ -2,8 +2,6 @@ import eBayApi from 'ebay-api';
 const eBay = new eBayApi({
     appId: process.env.NODE_APP_EBAY_API_KEY,
     certId: process.env.NODE_APP_EBAY_CERT_ID,
-    // appId: 'XinQi-Puppyup-PRD-8ac1813bf-324c8045',
-    // certId: 'PRD-ac1813bfe3ed-24c1-44b5-8ac5-69d8',
     sandbox: false,
   });
 
