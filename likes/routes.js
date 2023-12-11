@@ -25,11 +25,18 @@ function LikesRoutes(app) {
     const likes = await dao.findItemsThatUserLikes(userId);
     res.json(likes);
   };
+  const findLiked = async (req, res) => {
+    const userId = req.params.userId;
+    const itemId = req.params.itemId;
+    const like = await dao.findLiked(userId, itemId);
+    res.json(like);
+  }
   app.get("/api/likes", findAllLikes);
   app.post("/api/users/:userId/likes/:itemId", createUserLikesItem);
   app.delete("/api/users/:userId/likes/:itemId", deleteUserLikesItem);
   app.get("/api/likes/:itemId/users", findUsersThatLikeItem);
   app.get("/api/users/:userId/likes", findItemsThatUserLikes);
-}
+  app.get("/api/users/:userId/likes/:itemId", findLiked);
+}   
 
 export default LikesRoutes;

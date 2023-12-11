@@ -17,6 +17,8 @@ const schema = new mongoose.Schema(
       },
     firstName: String,
     headshot: String,
+    primaryVet: { type: mongoose.Schema.Types.ObjectId, ref: "vets" },
+    Park: String,
   },
   { collection: "users" }
 );

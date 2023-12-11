@@ -1,5 +1,6 @@
 import Search from './search/routes.js';
 import express from 'express';
+import bodyParser from 'body-parser';
 import session from "express-session";
 import UserRoutes from "./users/routes.js";
 import mongoose from "mongoose";
@@ -7,6 +8,13 @@ import "dotenv/config";
 import FollowsRoutes from "./follows/routes.js";
 import cors from "cors";
 import LikesRoutes from './likes/routes.js';
+import PostsRoutes from './posts/routes.js';
+import VetRoutes from './vets/routes.js';
+import ParkRoutes from './parks/routes.js';
+import DoctorRoutes from './doctors/route.js';
+import StaffRoutes from './staffs/routes.js';
+import ProductRoutes from './products/routes.js';
+
 
 const app = express();
 app.use(cors({
@@ -35,6 +43,8 @@ app.use(
   session(sessionOptions)
 );
 
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.get('/hello', (req, res) => {
   res.send('Life is good!');
 });
@@ -48,6 +58,12 @@ Search(app);
 UserRoutes(app);
 LikesRoutes(app);
 FollowsRoutes(app);
+PostsRoutes(app);
+VetRoutes(app);
+ParkRoutes(app);
+DoctorRoutes(app);
+StaffRoutes(app);
+ProductRoutes(app);
 app.listen(4000, () => {
   console.log('Server is running on port 4000');
 });

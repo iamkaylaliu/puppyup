@@ -9,3 +9,5 @@ export const findUsersThatLikeItem = (itemId) =>
   model.find({ itemId: itemId }).populate("user");
 export const findItemsThatUserLikes = (userId) => model.find({ user: userId });
 
+export const findLiked = (userId,itemId) =>
+    model.findOne({ user: userId, itemId: itemId });

@@ -28,23 +28,21 @@ function UserRoutes(app) {
   };
 
   const createUser = async (req, res) => {
-    const { username, password, email, role } = req.params;
-    const user = await dao.createUser({
-      username,
-      password,
-      email,
-      role,
-    });
+    const newUser = req.body;
+    const user = await dao.createUser(newUser);
     res.json(user);
   };
 
   const updateUser = async (req, res) => {
     const id = req.params.id;
     const newUser = req.body;
-    const status = await dao.updateUser(id, newUser);
-    const currentUser = await dao.findUserById(id);
-    req.session["currentUser"] = currentUser;
-    res.json(status);
+    const updatedUser = await dao.updateUser(id, newUser);
+    const currentUser = req.session["currentUser"];
+    if (currentUser && currentUser._id === id) {
+      const currentUser = await dao.findUserById(id);
+      req.session["currentUser"] = currentUser;
+    }
+    res.json(updatedUser);
   };
   const updateFirstName = async (req, res) => {
     const id = req.params.id;
@@ -55,6 +53,10 @@ function UserRoutes(app) {
   const deleteUser = async (req, res) => {
     const id = req.params.id;
     const status = await dao.deleteUser(id);
+    const currentUser = req.session["currentUser"];
+    if (currentUser && currentUser._id === id) {
+      req.session["currentUser"] = null;
+    }  
     res.json(status);
   };
   const signup = async (req, res) => {
@@ -65,6 +67,7 @@ function UserRoutes(app) {
         { message: "Username already taken" });
     }
     const currentUser = await dao.createUser(req.body);
+    console.log("aaa",currentUser._id);
     req.session['currentUser'] = currentUser;
     res.json(currentUser);
   };
@@ -74,7 +77,7 @@ function UserRoutes(app) {
     if (user) {
       const currentUser = user;
       req.session["currentUser"] = currentUser;
-      res.json(user);
+      res.json(currentUser);
     } else {
       res.sendStatus(403);
     }
@@ -100,7 +103,7 @@ function UserRoutes(app) {
 
   app.delete("/api/users/:id", deleteUser);
   app.get("/api/users/updateFirstName/:id/:newFirstName", updateFirstName);
-  app.get("/api/users/:username/:password/:email/:role", createUser);
+  app.post("/api/users", createUser);
   app.get("/api/users/role/:role", findUsersByRole);
   app.get("/api/users", findAllUsers);
   app.get("/api/users/:id", findUserById);
