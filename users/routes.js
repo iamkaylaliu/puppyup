@@ -28,9 +28,19 @@ function UserRoutes(app) {
   };
 
   const createUser = async (req, res) => {
-    const newUser = req.body;
+    try {
+      const newUser = req.body;
+      const username = newUser.username;
+      const userExists = await dao.findUserByUsername(username);
+      if (userExists) {
+          return res.status(400).json('Username taken');
+      }
     const user = await dao.createUser(newUser);
     res.json(user);
+    } catch (err) {
+      console.log("Duplicate Server")
+      return res.status(500).json({ error: 'Server error' });
+    }    
   };
 
   const updateUser = async (req, res) => {
@@ -60,17 +70,26 @@ function UserRoutes(app) {
     res.json(status);
   };
   const signup = async (req, res) => {
-    const user = await dao.findUserByUsername(
-      req.body.username);
-    if (user) {
-      res.status(400).json(
-        { message: "Username already taken" });
+    try {
+      const user = await dao.findUserByUsername(
+        req.body.username);
+      if (user) {
+        res.status(400).json(
+          { message: "Username already taken" });
     }
-    const currentUser = await dao.createUser(req.body);
-    console.log("aaa",currentUser._id);
-    req.session['currentUser'] = currentUser;
-    res.json(currentUser);
+      const currentUser = await dao.createUser(req.body);
+      console.log("aaa",currentUser._id);
+      req.session['currentUser'] = currentUser;
+      res.json(currentUser);
+    } catch (error) {
+      console.error("Signup error:", error);
+      if (!res.headersSent) {
+        return res.status(500).json({ message: "Internal server error" });
+    }
+    }
+    
   };
+
   const signin = async (req, res) => {
     const { username, password } = req.body;
     const user = await dao.findUserByCredentials(username, password);

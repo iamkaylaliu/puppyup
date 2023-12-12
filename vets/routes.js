@@ -8,6 +8,7 @@ function VetRoutes(app) {
   const findVetById = async (req, res) => {
     const id = req.params.id;
     const vet = await dao.findVetById(id);
+    console.log(vet);
     res.json(vet);
   };
 

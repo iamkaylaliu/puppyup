@@ -8,6 +8,7 @@ function ParkRoutes(app) {
   const findParkById = async (req, res) => {
     const id = req.params.id;
     const park = await dao.findParkById(id);
+    console.log(park);
     res.json(park);
   };
 
