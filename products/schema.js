@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema(
   {
-    title: { type: String, unique: true, required: true },
+    title: { type: String, required: true },
     seller: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     shortDescription: String,
     price: String,

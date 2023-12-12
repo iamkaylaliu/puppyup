@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const schema = new mongoose.Schema(
   {
-    vetName: { type: String, unique: true, required: true },
+    vetName: { type: String, required: true },
     address: String,
     phoneNumber: String,
     servicesOffered: String,
